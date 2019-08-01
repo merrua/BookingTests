@@ -54,10 +54,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BrowserTests.cs" />
+    <Compile Include="BrowserFactory.cs" />
+    <Compile Include="ChromeBrowserTests.cs" />
+    <Compile Include="BrowserType.cs" />
+    <Compile Include="SearchResultsPage.cs" />
     <Compile Include="EdgeTests.cs" />
     <Compile Include="FirefoxTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SiteConsts.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
