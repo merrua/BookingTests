@@ -13,9 +13,9 @@ namespace BookingProject
     {
         IWebDriver driver;
 
-        public SearchResults(IWebDriver driver)
+        public SearchResults(IWebDriver Driver)
         {
-            this.driver = driver;
+            driver = Driver;
         }
 
         // add the various page elements here

@@ -1,4 +1,5 @@
-﻿using OpenQA.Selenium;
+﻿using BoDi;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Edge;
 using OpenQA.Selenium.Firefox;
@@ -7,22 +8,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TechTalk.SpecFlow;
 using static BookingProject.DriverType;
 
 namespace BookingProject
 {
+    [Binding]
     public class BrowserFactory
     {
         IWebDriver driver;
         string path = @"C:\Code\Webdriver";
+        private readonly IObjectContainer objectContainer;
 
-        public void closeWebDriver(IWebDriver driver)
+        public BrowserFactory(IObjectContainer ObjectContainer)
         {
-            if (driver != null)
-            {
-                driver.Quit();
-                driver = null;
-            }
+            objectContainer = ObjectContainer;
         }
 
         public IWebDriver GetDriver(DriverTypes driverTypes)
@@ -31,6 +31,7 @@ namespace BookingProject
             {
                 ChromeOptions options = new ChromeOptions();
                 options.AddArguments("-no-remote");
+                //options.AddArguments("--headless");
                 driver = new ChromeDriver(path, options, new TimeSpan(0, 0, 10));
                 driver.Manage().Window.Maximize();
             }
@@ -45,6 +46,7 @@ namespace BookingProject
             }
             else if (driverTypes == DriverTypes.Edge)
             {
+                // edge doesn't support headless mode
                 EdgeOptions options = new EdgeOptions();
                 driver = new EdgeDriver(path, options, new TimeSpan(0, 0, 15));
                 driver.Manage().Window.Maximize();
@@ -61,6 +63,27 @@ namespace BookingProject
             }
 
             return driver;
+        }
+
+        [BeforeScenario("Chrome")]
+        public void BeforeScenarioChrome()
+        {
+            IWebDriver driver = GetDriver(DriverTypes.Chrome);
+            objectContainer.RegisterInstanceAs<IWebDriver>(driver);
+        }
+
+        [BeforeScenario("Firefox")]
+        public void BeforeScenarioFirefox()
+        {
+            IWebDriver driver = GetDriver(DriverTypes.Firefox);
+            objectContainer.RegisterInstanceAs<IWebDriver>(driver);
+        }
+
+        [BeforeScenario("Edge")]
+        public void BeforeScenarioEdge()
+        {
+            IWebDriver driver = GetDriver(DriverTypes.Edge);
+            objectContainer.RegisterInstanceAs<IWebDriver>(driver);
         }
     }
 }
